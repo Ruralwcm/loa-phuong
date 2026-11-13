@@ -123,15 +123,15 @@
       <label>Ghi rõ số lần</label><input type="text" id="soLanKhac" placeholder="Nhập số lần cụ thể">
     </div>
     <label>Khung giờ phát <span style="color:var(--red)">*</span></label>
-    <div class="radios" id="khungGioGroup" style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px">
-      <label style="text-align:center"><input type="checkbox" name="kg" value="5h-6h" onchange="updateKhungGio()">5h-6h</label>
-      <label style="text-align:center"><input type="checkbox" name="kg" value="6h-7h" onchange="updateKhungGio()">6h-7h</label>
-      <label style="text-align:center"><input type="checkbox" name="kg" value="7h-8h" onchange="updateKhungGio()">7h-8h</label>
-      <label style="text-align:center"><input type="checkbox" name="kg" value="8h-9h" onchange="updateKhungGio()">8h-9h</label>
-      <label style="text-align:center"><input type="checkbox" name="kg" value="11h-12h" onchange="updateKhungGio()">11h-12h</label>
-      <label style="text-align:center"><input type="checkbox" name="kg" value="16h-17h" onchange="updateKhungGio()">16h-17h</label>
-      <label style="text-align:center"><input type="checkbox" name="kg" value="17h-18h" onchange="updateKhungGio()">17h-18h</label>
-      <label style="text-align:center"><input type="checkbox" name="kg" value="18h-19h" onchange="updateKhungGio()">18h-19h</label>
+    <div class="radios" id="khungGioGroup" style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px">
+      <label style="text-align:center;padding:6px 4px;font-size:11.5px"><input type="checkbox" name="kg" value="5h-6h" onchange="updateKhungGio()">5h-6h</label>
+      <label style="text-align:center;padding:6px 4px;font-size:11.5px"><input type="checkbox" name="kg" value="6h-7h" onchange="updateKhungGio()">6h-7h</label>
+      <label style="text-align:center;padding:6px 4px;font-size:11.5px"><input type="checkbox" name="kg" value="7h-8h" onchange="updateKhungGio()">7h-8h</label>
+      <label style="text-align:center;padding:6px 4px;font-size:11.5px"><input type="checkbox" name="kg" value="8h-9h" onchange="updateKhungGio()">8h-9h</label>
+      <label style="text-align:center;padding:6px 4px;font-size:11.5px"><input type="checkbox" name="kg" value="11h-12h" onchange="updateKhungGio()">11h-12h</label>
+      <label style="text-align:center;padding:6px 4px;font-size:11.5px"><input type="checkbox" name="kg" value="16h-17h" onchange="updateKhungGio()">16h-17h</label>
+      <label style="text-align:center;padding:6px 4px;font-size:11.5px"><input type="checkbox" name="kg" value="17h-18h" onchange="updateKhungGio()">17h-18h</label>
+      <label style="text-align:center;padding:6px 4px;font-size:11.5px"><input type="checkbox" name="kg" value="18h-19h" onchange="updateKhungGio()">18h-19h</label>
     </div>
     <input type="hidden" id="khungGio">
     <!-- Tiền/tuần tự tính -->

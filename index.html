@@ -123,17 +123,26 @@
       <label>Ghi rõ số lần</label><input type="text" id="soLanKhac" placeholder="Nhập số lần cụ thể">
     </div>
     <label>Khung giờ phát <span style="color:var(--red)">*</span></label>
-    <div class="radios" id="khungGioGroup">
-      <label><input type="checkbox" name="kg" value="5h-6h" onchange="updateKhungGio()">5h-6h</label>
-      <label><input type="checkbox" name="kg" value="6h-7h" onchange="updateKhungGio()">6h-7h</label>
-      <label><input type="checkbox" name="kg" value="7h-8h" onchange="updateKhungGio()">7h-8h</label>
-      <label><input type="checkbox" name="kg" value="8h-9h" onchange="updateKhungGio()">8h-9h</label>
-      <label><input type="checkbox" name="kg" value="11h-12h" onchange="updateKhungGio()">11h-12h</label>
-      <label><input type="checkbox" name="kg" value="16h-17h" onchange="updateKhungGio()">16h-17h</label>
-      <label><input type="checkbox" name="kg" value="17h-18h" onchange="updateKhungGio()">17h-18h</label>
-      <label><input type="checkbox" name="kg" value="18h-19h" onchange="updateKhungGio()">18h-19h</label>
+    <div class="radios" id="khungGioGroup" style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px">
+      <label style="text-align:center"><input type="checkbox" name="kg" value="5h-6h" onchange="updateKhungGio()">5h-6h</label>
+      <label style="text-align:center"><input type="checkbox" name="kg" value="6h-7h" onchange="updateKhungGio()">6h-7h</label>
+      <label style="text-align:center"><input type="checkbox" name="kg" value="7h-8h" onchange="updateKhungGio()">7h-8h</label>
+      <label style="text-align:center"><input type="checkbox" name="kg" value="8h-9h" onchange="updateKhungGio()">8h-9h</label>
+      <label style="text-align:center"><input type="checkbox" name="kg" value="11h-12h" onchange="updateKhungGio()">11h-12h</label>
+      <label style="text-align:center"><input type="checkbox" name="kg" value="16h-17h" onchange="updateKhungGio()">16h-17h</label>
+      <label style="text-align:center"><input type="checkbox" name="kg" value="17h-18h" onchange="updateKhungGio()">17h-18h</label>
+      <label style="text-align:center"><input type="checkbox" name="kg" value="18h-19h" onchange="updateKhungGio()">18h-19h</label>
     </div>
     <input type="hidden" id="khungGio">
+    <!-- Tiền/tuần tự tính -->
+    <div id="tienTuanBox" style="display:none;margin-top:10px;background:#f0fdf4;border:1px solid #86efac;border-radius:10px;padding:12px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:13px;font-weight:600;color:#166534">💰 Tiền/tuần:</span>
+        <span style="font-size:18px;font-weight:800;color:var(--red)" id="tienTuan">0</span>
+        <span style="font-size:12px;color:var(--mut)">VNĐ/tuần</span>
+      </div>
+      <div id="tienTuanWarn" style="display:none;font-size:12px;font-weight:700;color:var(--red);margin-top:6px">⚠️ Chi phí loa phường/tuần đang cao. Cân nhắc lại số lần hoặc đơn giá nhé!</div>
+    </div>
     <label>Ghi chú</label>
     <textarea id="ghiChu" rows="2" placeholder="Ghi chú thêm nếu có..."></textarea>
   </div>
@@ -198,11 +207,37 @@ async function gasGet(params) {
   return r.json();
 }
 
-// ═══ KHUNG GIỜ CHECKBOXES ═══
+// ═══ KHUNG GIỜ + TIỀN/TUẦN ═══
+const TIEN_TUAN_WARN = 500000; // Cảnh báo nếu > 500K/tuần
+
 function updateKhungGio() {
   const checked = [...document.querySelectorAll('input[name="kg"]:checked')].map(cb => cb.value);
   $('khungGio').value = checked.join(', ');
+  calcTienTuan();
 }
+
+function calcTienTuan() {
+  const donGia = parseInt($('donGia').value) || 0;
+  let soLan = $('soLan').value;
+  if (soLan === 'khac') soLan = $('soLanKhac').value.trim();
+  soLan = parseInt(soLan) || 0;
+
+  if (donGia > 0 && soLan > 0) {
+    const total = donGia * soLan;
+    $('tienTuanBox').style.display = 'block';
+    $('tienTuan').textContent = total.toLocaleString('vi-VN');
+    $('tienTuanWarn').style.display = total > TIEN_TUAN_WARN ? 'block' : 'none';
+  } else {
+    $('tienTuanBox').style.display = 'none';
+  }
+}
+
+$('donGia').oninput = calcTienTuan;
+$('soLan').onchange = function() {
+  $('soLanKhacRow').style.display = this.value === 'khac' ? 'block' : 'none';
+  calcTienTuan();
+};
+$('soLanKhac').oninput = calcTienTuan;
 
 // ═══ INIT ═══
 async function init() {
@@ -267,11 +302,6 @@ function resetStore() {
   $('vLine2').innerHTML = '—';
   $('btnSubmit').disabled = true;
 }
-
-// ═══ SỐ LẦN KHÁC ═══
-$('soLan').onchange = function() {
-  $('soLanKhacRow').style.display = this.value === 'khac' ? 'block' : 'none';
-};
 
 // ═══ SUBMIT ═══
 $('btnSubmit').onclick = async function() {
